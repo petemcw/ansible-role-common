@@ -1,0 +1,22 @@
+---
+# Defines tasks applicable to sudo
+
+- name: Write sudoers configuration template
+  template: >
+    src=etc-sudoers.j2
+    dest=/etc/sudoers
+    mode=0440 owner=root group=root
+    backup=yes
+    validate="visudo -q -c -f %s"
+  tags:
+    - common
+    - sudo
+
+- name: Create administrative group
+  group: >
+    name={{ sysadmin_group }}
+    system=yes
+    state=present
+  tags:
+    - common
+    - sudo

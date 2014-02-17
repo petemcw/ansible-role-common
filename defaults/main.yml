@@ -1,0 +1,9 @@
+---
+# The variables file used for common playbooks.
+# If not overriden in inventory or as a parameter, this is the value that will be used
+
+locale: 'en_US.UTF-8'
+timezone: 'Etc/UTC'
+default_editor: '/usr/bin/vim.basic'
+sysadmin_email: 'root@localhost'
+sysadmin_group: 'admin'

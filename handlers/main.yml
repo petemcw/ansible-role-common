@@ -1,0 +1,10 @@
+---
+# Handlers for common notifications.
+
+- name: update tzdata
+  command: >
+    /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: update locales
+  command: >
+    /usr/sbin/update-locale --locale-file=/etc/default/locale

@@ -1,0 +1,137 @@
+---
+# Defines tasks applicable across all machines in the infrastructure.
+
+- name: Include the OS specific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - common
+
+- name: Set hostname
+  hostname: >
+    name="{{ inventory_hostname_short }}"
+  tags:
+    - common
+
+- name: Create IPv4 localhost entry in hosts file
+  lineinfile: >
+    dest=/etc/hosts
+    regexp="^127\.0\.0\.1"
+    line="127.0.0.1    localhost {{ inventory_hostname_short }}"
+    state=present
+  tags:
+    - common
+
+- name: Create IPv4 entry in hosts file
+  lineinfile: >
+    dest=/etc/hosts
+    regexp="^{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
+    line="{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}    {{ inventory_hostname }} {{ inventory_hostname_short }}"
+    state=present
+  when: hostvars[inventory_hostname].ansible_default_ipv4.address is defined
+  tags:
+    - common
+
+- name: Create IPv6 localhost entry in hosts file
+  lineinfile: >
+    dest=/etc/hosts
+    regexp="^::1"
+    line="::1    ip6-localhost ip6-loopback {{ inventory_hostname_short }}"
+    state=present
+  tags:
+    - common
+
+- name: Create IPv6 entry in hosts file
+  lineinfile: >
+    dest=/etc/hosts
+    regexp="^{{ hostvars[inventory_hostname].ansible_default_ipv6.address }}"
+    line="{{ hostvars[inventory_hostname].ansible_default_ipv6.address }}    {{ inventory_hostname }} {{ inventory_hostname_short }}"
+    state=present
+  when: hostvars[inventory_hostname].ansible_default_ipv6.address is defined
+  tags:
+    - common
+
+- name: Set the system locale
+  template: >
+    src=locale.j2
+    dest={{ default_config_dir }}/locale
+    mode=0644 owner=root group=root
+  notify: update locales
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Set the system localtime
+  file: >
+    src=/usr/share/zoneinfo/{{ timezone }}
+    dest=/etc/localtime
+    state=link force=yes
+    owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Set the system timezone
+  template: >
+    src=etc-timezone.j2
+    dest=/etc/timezone
+    mode=0644 owner=root group=root
+  notify: update tzdata
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Enable MOTD explaining server is under Ansible control
+  template: >
+    src=95-ansible.j2
+    dest="{{ motd_config_dir }}/95-ansible"
+    mode=0755 owner=root group=root
+  tags:
+    - common
+
+- name: Disable help text in MOTD
+  file: >
+    path={{ motd_config_dir }}/10-help-text
+    state=absent
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Install packages for Debian derivatives
+  apt: >
+    pkg={{ item }}
+    update_cache=yes
+    state=latest
+  with_items: common_packages
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Adjust APT update intervals
+  template: >
+    src=etc-apt-apt-conf-d-10periodic.j2
+    dest=/etc/apt/apt.conf.d/10periodic
+    mode=0644 owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Set unattended-upgrades to only update security patches
+  template: >
+    src=etc-apt-apt-conf-d-50unattended-upgrades.j2
+    dest=/etc/apt/apt.conf.d/50unattended-upgrades
+    mode=0644 owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Set default editor
+  file: >
+    src={{ default_editor }}
+    dest=/etc/alternatives/editor
+    state=link force=yes
+    owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- include: sudo.yml
