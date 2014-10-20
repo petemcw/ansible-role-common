@@ -115,7 +115,7 @@
   tags:
     - common
 
-- name: Set unattended-upgrades to only update security patches
+- name: Write unattended-upgrades configuration
   template: >
     src=etc-apt-apt-conf-d-50unattended-upgrades.j2
     dest=/etc/apt/apt.conf.d/50unattended-upgrades

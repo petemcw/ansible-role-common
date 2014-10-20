@@ -1,6 +1,7 @@
 # Common Role for Ansible
 
-This role configures common server settings that are generally used across all server instances. The following items are addressed:
+This role configures common server settings that are generally used across all
+server instances. The following items are addressed:
 
 * Setting the `hostname`
 * Configure defaults like:
@@ -12,11 +13,13 @@ This role configures common server settings that are generally used across all s
 * Root email forwarding to a specified admin
 * Installing common packages
 
-__Note:__ This role applies a fairly opinionated set of "common" tasks. Feel free to add/remove based on your own preferences.
+__Note:__ This role applies a fairly opinionated set of "common" tasks. Feel free
+to add/remove based on your own preferences.
 
 ## Requirements
 
-This role requires [Ansible](http://www.ansibleworks.com/) version 1.4 or higher and the Debian/Ubuntu platform.
+This role requires [Ansible](http://www.ansibleworks.com/) version 1.4 or higher
+and the Debian/Ubuntu platform.
 
 ## Role Variables
 
