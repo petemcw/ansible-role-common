@@ -4,6 +4,7 @@
 default_config_dir: '/etc/default'
 motd_config_dir: '/etc/update-motd.d'
 common_packages:
+  - 'ack-grep'
   - 'bash-completion'
   - 'build-essential'
   - 'curl'
