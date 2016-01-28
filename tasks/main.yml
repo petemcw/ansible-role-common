@@ -134,4 +134,35 @@
   tags:
     - common
 
+- name: Install Powerline
+  command: >
+    /usr/bin/pip install git+git://github.com/powerline/powerline
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Install Powerline symbols
+  command: >
+    sh -c 'wget -q -O /usr/share/fonts/PowerlineSymbols.otf "https://github.com/Lokaltog/powerline/raw/develop/font/PowerlineSymbols.otf"'
+    creates=/usr/share/fonts/PowerlineSymbols.otf
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Refresh font cache
+  command: >
+    /usr/bin/fc-cache -vf
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Write Powerline font template
+  template: >
+    src=etc-fonts-conf-d-10-powerline-conf.j2
+    dest=/etc/fonts/conf.d/10-powerline-symbols.conf
+    mode=0644 owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
 - include: sudo.yml
