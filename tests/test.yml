@@ -1,0 +1,6 @@
+---
+- name: Configure common settings for all nodes
+  hosts: all
+  connection: local
+  roles:
+    - test_role
