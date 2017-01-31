@@ -9,6 +9,7 @@ common_packages:
   - 'curl'
   - 'htop'
   - 'landscape-common'
+  - 'language-pack-en'
   - 'locales'
   - 'locate'
   - 'openssl'

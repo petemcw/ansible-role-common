@@ -1,17 +1,27 @@
 ---
-- name: Generate the system locales
-  locale_gen: >
-    name="{{ item }}"
-    state=present
-  with_items: common_locales
+- name: Create the default locales file (Debian)
+  template: >
+    src=locale.j2
+    dest=/etc/default/locale
+    mode=0644 owner=root group=root
   when: ansible_os_family == "Debian"
   tags:
     - common
 
-- name: Update default locale settings (Debian)
-  command: >
-    update-locale --locale-file=/etc/default/locale LANG="{{ common_locales[0] }}" LC_ALL="{{ common_locales[0] }}"
-  changed_when: false
+- name: Define the system locales to generate (Debian)
+  template: >
+    src=locale.gen.j2
+    dest=/etc/locale.gen
+    mode=0644 owner=root group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
+
+- name: Generate the default system locale (Debian)
+  locale_gen: >
+    name="en_US.UTF-8"
+    state=present
+  with_items: common_locales
   when: ansible_os_family == "Debian"
   tags:
     - common
@@ -31,12 +41,5 @@
     regexp: "^LANG=.*"
     line: "LANG=\"{{ common_locales[0] }}\""
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version >= "7"
-  tags:
-    - common
-
-- name: Re-configure locale data
-  command: >
-    dpkg-reconfigure -f noninteractive locales
-  when: ansible_os_family == 'Debian'
   tags:
     - common

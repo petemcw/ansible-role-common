@@ -4,4 +4,4 @@
 
 # Locales to generate (The first one will be the default)
 common_locales:
-  - en_US.UTF-8
+  - "en_US.UTF-8"

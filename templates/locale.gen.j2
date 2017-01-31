@@ -1,0 +1,5 @@
+// This file is under control by Ansible for {{inventory_hostname}}
+// DO NOT MODIFY by hand; update the role called: {{ role_path | basename }}
+{% for locale in common_locales %}
+{{ locale }} UTF-8
+{% endfor %}
