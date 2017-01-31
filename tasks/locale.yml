@@ -1,0 +1,42 @@
+---
+- name: Generate the system locales
+  locale_gen: >
+    name="{{ item }}"
+    state=present
+  with_items: common_locales
+  when: ansible_os_family == "Debian"
+  tags:
+    - common
+
+- name: Update default locale settings (Debian)
+  command: >
+    update-locale --locale-file=/etc/default/locale LANG="{{ common_locales[0] }}" LC_ALL="{{ common_locales[0] }}"
+  changed_when: false
+  when: ansible_os_family == "Debian"
+  tags:
+    - common
+
+- name: Update default locale settings (RedHat 6.x)
+  lineinfile:
+    dest: /etc/sysconfig/i18n
+    regexp: "^LANG=.*"
+    line: "LANG=\"{{ common_locales[0] }}\""
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version <= "6"
+  tags:
+    - common
+
+- name: Update default locale settings (RedHat 7.x)
+  lineinfile:
+    dest: /etc/locale.conf
+    regexp: "^LANG=.*"
+    line: "LANG=\"{{ common_locales[0] }}\""
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version >= "7"
+  tags:
+    - common
+
+- name: Re-configure locale data
+  command: >
+    dpkg-reconfigure -f noninteractive locales
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common

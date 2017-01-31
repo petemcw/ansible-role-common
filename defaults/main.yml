@@ -1,25 +1,7 @@
 ---
-# The variables file used for common playbooks.
+# The variables file used for Timezone playbooks.
 # If not overriden in inventory or as a parameter, this is the value that will be used
 
-locale: 'en_US.UTF-8'
-timezone: 'Etc/UTC'
-default_editor: '/usr/bin/vim.basic'
-sysadmin_email: 'root@localhost'
-sysadmin_group: 'admin'
-
-apt_periodic_update_package_list: 1
-apt_periodic_download_upgradeable_packages: 1
-apt_periodic_autoclean_interval: 7
-apt_periodic_unattended_upgrade: 1
-
-unattended_allowed_origins: [security]
-unattended_package_blacklist: []
-unattended_autofix_interrupted_dpkg: true
-unattended_minimal_steps: false
-unattended_install_on_shutdown: false
-unattended_mail: false
-unattended_mail_only_on_error: false
-unattended_remove_unused_dependencies: false
-unattended_automatic_reboot: false
-unattended_bandwidth_limit: false
+# Locales to generate (The first one will be the default)
+common_locales:
+  - en_US.UTF-8

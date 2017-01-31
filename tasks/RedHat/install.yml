@@ -1,0 +1,39 @@
+---
+# Defines tasks for RedHat/CentOS installation
+
+- name: Validate if EPEL is already configured
+  stat: >
+    path="/etc/yum.repos.d/epel.repo"
+  register: epel_path
+  tags:
+    - common
+
+- name: Install EPEL Repository
+  yum: >
+    name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+    state=present
+  register: epel_install_result
+  until: '"failed" not in result'
+  retries: 5
+  delay: 10
+  when: not epel_path.stat.exists
+  tags:
+    - common
+
+- name: Import EPEL GPG Key
+  rpm_key: >
+    key="/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+    state=present
+  when: not epel_path.stat.exists
+  ignore_errors: "{{ ansible_check_mode }}"
+  tags:
+    - common
+
+- name: Install packages
+  yum: >
+    name="{{ item }}"
+    state=latest
+    enablerepo=epel
+  with_items: "{{ common_packages }}"
+  tags:
+    - common

@@ -1,0 +1,24 @@
+---
+# Defines variables for CentOS/RedHat
+
+common_packages:
+  - 'ack'
+  - 'bash-completion'
+  - 'ca-certificates'
+  - 'curl'
+  - '@Development tools'
+  - 'htop'
+  - 'mlocate'
+  - 'openssl'
+  - 'python2'
+  - 'python2-devel'
+  - 'python2-pip'
+  - 'python-pycurl'
+  - 'rsync'
+  - 'wget'
+  - 'sudo'
+  - 'tmux'
+  - 'unzip'
+  - 'vim-enhanced'
+  - 'zip'
+  - 'zsh'

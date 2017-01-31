@@ -1,5 +1,5 @@
 ---
-# Defines variables for Debian/Ubuntu
+# Defines variables for Ubuntu Xenial
 
 common_packages:
   - 'ack-grep'
@@ -18,7 +18,6 @@ common_packages:
   - 'rsync'
   - 'wget'
   - 'ssl-cert'
-  - 'systemd-shim'
   - 'sudo'
   - 'tmux'
   - 'unzip'

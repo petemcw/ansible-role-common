@@ -1,0 +1,12 @@
+---
+- name: Set default text editor
+  file: >
+    src="{{ commond_default_editor }}"
+    dest=/etc/alternatives/editor
+    state=link
+    force=yes
+    owner=root
+    group=root
+  when: ansible_os_family == 'Debian'
+  tags:
+    - common
